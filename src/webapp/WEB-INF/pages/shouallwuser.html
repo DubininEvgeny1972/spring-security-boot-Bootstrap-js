@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns: lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Show All User</title>
+</head>
+<body>
+
+<table border="1">
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Возраст</th>
+        <th>Логин</th>
+        <th>Пароль</th>
+        <th>Права доступа</th>
+    </tr>
+
+    <tr th:each="user, state : ${users}">
+        <td th:utext="${user.getName()}"></td>
+        <td th:utext="${user.getLastName()}"></td>
+        <td th:utext="${user.getAge()}"></td>
+        <td th:utext="${user.getLogin()}"></td>
+        <td th:utext="${user.getPassword()}"></td>
+        <td th:utext="${user.getRoles()}"></td>
+        <td>
+            <a type="button" th:href="@{/admin/{id}/deleteUser(id=${user.getId()})}"> Удалить </a>
+        </td>
+        <td>
+            <a th:href="@{/admin/{id}/edit(id=${user.getId()})}"> Редактировать </a>
+        </td>
+    </tr>
+</table>
+<br/>
+<br/>
+</td>
+<a type="button" th:href="@{/admin/adduser/}"> Добавить юзера </a>
+</td>
+<br/>
+<br/>
+</td>
+<a type="button" th:href="@{/user/thisuser}"> Личная страничка </a>
+</td>
+<br/>
+<br/>
+</td>
+<a type="button" th:href="@{/}"> Выход </a>
+</td>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns: lang="ru">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/new}" th:object="${user}">
+
+    <label for="name">Enter name: </label>
+    <input type="text" th:field="*{userName}" id="name" />
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{userPassword}" id="password" />
+    <br/>
+    <div>
+        <p>Выберите роли для пользователя: </p>
+<!--        <select name="rolesSelected" multiple required size="6">-->
+<!--        <option disabled selected>select role</option>-->
+        <div  th:each="role : ${allRoles}">
+        <option th:text="${role.getRoleName()}" th:value="${role.getRoleId()}" name="roles"/>
+        <!--        </select>-->
+        </div>
+    </div>
+    <input type="submit" value="Create!"/>
+</form>
+</body>
+</html>

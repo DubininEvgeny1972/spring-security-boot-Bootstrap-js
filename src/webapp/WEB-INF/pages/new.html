@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Add user</title>
+</head>
+<body>
+Добавить пользователя
+<br/>
+<br/>
+    <form th:method="POST" th:action="@{/admin/createuser}" th:object="${user}">
+        <fieldset>
+            <legend>Данные пользователя</legend>
+            <p>
+                <label th:for="name">Имя<input type="text" name="name" th:id="name">
+                </label>
+                <br/>
+                <br/>
+                <label th:for="lastName">Фамилия<input type="text" name="lastName" th:id="lastName">
+                </label>
+                <br/>
+                <br/>
+                <label th:for="age">Возраст <input type="text" name="age" th:id="age">
+                </label>
+                <br/>
+                <br/>
+                <label th:for="login">Логин <input type="text" name="login" th:id="login">
+                </label>
+                <br/>
+                <br/>
+                <label th:for="password">Пароль <input type="text" name="password" th:id="password">
+                </label>
+                <br/>
+                <br/>
+                <br/>
+            </p>
+        </fieldset>
+
+        <legend>_________________________________________________________________________________</legend>
+        <legend>Выберите роли для пользователя</legend>
+        <br/>
+        <div>
+            <select name="roles" multiple required size="6">
+                <option disabled selected>select role</option>
+                <div  th:each="role : ${user.getRoles()}">
+                    <option th:text="${role.getName()}" th:value="${role.getName()}" name="roles"/>
+                </div>
+            </select>
+        </div>
+        <br/>
+        <br/>
+        <button type="submit">Сохранить пользователя</button>
+        <br/>
+        <br/>
+    </form>
+    <br/>
+    <a type="button" th:href="@{/}"> Выход </a>
+</div>
+</body>
+</html>
