@@ -23,7 +23,7 @@ public class AdminController {
 
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model) {
-        model.addAttribute("users", service.getAllUsers());
+        model.addAttribute("users", service.findAll());
         return "shouallwuser";
     }
 
@@ -35,7 +35,7 @@ public class AdminController {
 
     @GetMapping("/{id}/edit")
     public String edit(ModelMap model, @PathVariable("id") long id) {
-        model.addAttribute("user", service.getUser(id));
+        model.addAttribute("user", service.getById(id));
         return "edit";
     }
 
@@ -55,7 +55,7 @@ public class AdminController {
     @PostMapping("/createuser")
     public String createNewUser(@ModelAttribute("user") User user, ModelMap model) {
         service.saveUser(user, user.getRoles());
-        model.addAttribute("users", service.getAllUsers());
+        model.addAttribute("users", service.findAll());
         return "redirect:/admin/adminpage";
     }
 }

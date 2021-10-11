@@ -1,11 +1,15 @@
 package web.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Data//ломбок аннотация: генерирует геттеры, сеттеры, иквалс, хеш код методы
+@NoArgsConstructor//ломбок аннотация: конструктор без аргуметов
 public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +25,6 @@ public class Role implements GrantedAuthority {
 
     public Role(Long id) {
         this.id = id;
-    }
-
-    public Role() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     @Override

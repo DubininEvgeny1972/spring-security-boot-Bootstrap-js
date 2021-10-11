@@ -1,73 +1,68 @@
 package web.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.dao.UserDao.UserDao;
+import web.Repository.UserRepository.UsersRepository;
 import web.model.Role;
 import web.model.User;
 import java.util.List;
 import java.util.Set;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+@Transactional
+public class UserServiceImpl implements UserService {
+
     private PasswordEncoder passwordEncoder;
-    private UserDao userDao;
+    private UsersRepository usersRepository;
     @Autowired
-    public UserServiceImpl(UserDao userDaoHiber, PasswordEncoder passwordEncoder) {
-        this.userDao = userDaoHiber;
+    public UserServiceImpl(@Lazy UsersRepository usersRepository, @Lazy PasswordEncoder passwordEncoder) {
+        this.usersRepository = usersRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        return userDao.getUserByUsername(username);
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        return usersRepository.loadUserByUsername(userName);
     }
 
-    @Transactional
     @Override
-    public User getUserByUsername(String userName){
-        return userDao.getUserByUsername(userName);
+    public User getUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+        return usersRepository.getUserByUsername(username);
     }
 
-    @Transactional
     @Override
-    public User getUser(Long id){
-        return userDao.getUser(id);
+    public User getById(Long id){
+        return usersRepository.getById(id);
     }
 
-    @Transactional
     @Override
     public void saveUser(User user, Set<Role> roles){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.saveUser(user, roles);
+        usersRepository.saveUser(user, roles);
     }
 
-    @Transactional
     @Override
     public void removeUserById(long id){
-        userDao.removeUserById(id);
+        usersRepository.removeUserById(id);
     }
 
-    @Transactional
     @Override
-    public List<User> getAllUsers(){
-        return userDao.getAllUsers();
+    public List<User> findAll(){
+        return usersRepository.findAll();
     }
 
-    @Transactional
     @Override
     public void updateUser(User user) {
-        user.setRoles(userDao.getUser(user.getId()).getRoles());
-        if (!user.getPassword().equals(userDao.getUser(user.getId()).getPassword())) {
+        user.setRoles(usersRepository.getById(user.getId()).getRoles());
+        if (!user.getPassword().equals(usersRepository.getById(user.getId()).getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userDao.updateUser(user);
+        usersRepository.updateUser(user);
     }
 }

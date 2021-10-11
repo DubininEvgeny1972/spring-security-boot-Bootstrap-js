@@ -1,5 +1,6 @@
-package web.dao.RoleDao;
+package web.Repository.RoleRepository;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import web.model.Role;
 import javax.persistence.EntityManager;
@@ -7,8 +8,8 @@ import javax.persistence.PersistenceContext;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Repository
-public class RoleDaoImpl implements RoleDao{
+@Component
+public class RoleRepositoryImpl implements RoleRepository {
     @PersistenceContext
     private EntityManager em;
 

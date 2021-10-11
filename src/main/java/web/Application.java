@@ -1,30 +1,30 @@
-package web.config;
+package web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
-import javax.annotation.PostConstruct;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-public class StartProject {
-
-    private final UserService service;
-    private final RoleService roleService;
+@SpringBootApplication
+public class Application {
+    static UserService userService;
+    static RoleService roleService;
 
     @Autowired
-    public StartProject(UserService service, RoleService roleService) {
-        this.service = service;
+    public Application(UserService userService, RoleService roleService) {
+        this.userService = userService;
         this.roleService = roleService;
     }
 
-    @PostConstruct
-    public void startProject() {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
         User user1 = new User();
         user1.setName("Bob");
         user1.setLastName("Dillan");
@@ -44,7 +44,7 @@ public class StartProject {
         setStartRoles.add(role1);
         setStartRoles.add(role2);
         roleService.saveRole(setStartRoles);
-        service.saveUser(user1, setStartRoles.stream().limit(1).collect(Collectors.toSet()));
-        service.saveUser(user2, setStartRoles);
+        userService.saveUser(user1, roleService.getAllRoles());
+//        userService.saveUser(user2, roleService.getAllRoles());
     }
 }
