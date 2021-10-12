@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class RoleRepositoryImpl implements RoleRepository {
     @PersistenceContext
     private EntityManager em;

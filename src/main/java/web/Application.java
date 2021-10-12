@@ -7,7 +7,6 @@ import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +44,6 @@ public class Application {
         setStartRoles.add(role2);
         roleService.saveRole(setStartRoles);
         userService.saveUser(user1, roleService.getAllRoles());
-//        userService.saveUser(user2, roleService.getAllRoles());
+        userService.saveUser(user2, roleService.getAllRoles().stream().limit(1).collect(Collectors.toSet()));
     }
 }

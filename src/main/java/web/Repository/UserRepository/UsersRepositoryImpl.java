@@ -6,17 +6,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import web.Repository.UserRepository.UsersRepository;
 import web.model.Role;
 import web.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-@Component
+
+@Repository
 public class UsersRepositoryImpl implements UsersRepository {
     @PersistenceContext
     private EntityManager em;
