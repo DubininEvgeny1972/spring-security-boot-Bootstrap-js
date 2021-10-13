@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns: lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Show All User</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
 
@@ -24,13 +25,64 @@
         <td th:utext="${user.getPassword()}"></td>
         <td th:utext="${user.getRoles()}"></td>
         <td>
-            <a type="button" th:href="@{/admin/{id}/deleteUser(id=${user.getId()})}"> Удалить </a>
+            <a class="btn btn-info" role="button" data-toggle="modal" data-target="#modalEdit" th:attrappend="data-target=${user.id}">Редактирование</a>
         </td>
-        <td>
-            <a th:href="@{/admin/{id}/edit(id=${user.getId()})}"> Редактировать </a>
-        </td>
+        <!--модальное окно редактирования-->
+        <div class="modal fade" id="modalEdit" th:attrappend="id=${user.id}"
+             tabindex="-1" role="dialog"
+             aria-labelledby="TitleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit user</h5>
+                        <button type="button" class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
+                            <label for="name">Изменить имя</label>
+                            <input type="hidden" th:field="*{id}" id="id">
+                            <input type="text" th:field="*{name}" id="name">
+                            <br/>
+                            <br/>
+                            <label for="lastname">Изменить фамилию</label>
+                            <input type="text" th:field="*{lastName}" id="lastName">
+                            <br/>
+                            <br/>
+                            <label for="age">Изменить возраст</label>
+                            <input type="text" th:field="*{age}" id="age">
+                            <br/>
+                            <br/>
+                            <label for="login">Изменить логин</label>
+                            <input type="text" th:field="*{login}" id="login">
+                            <br/>
+                            <br/>
+                            <label for="password">Изменить пароль</label>
+                            <input type="text" th:field="*{password}" id="password">
+                            <br/>
+                            <br/>
+                            <legend>Выберите права для пользователя (отсутствие выбора означает оставить старые права)</legend>
+                            <br/>
+                            <div  th:each="role : ${user.getRoles()}">
+                                <label>
+                                    <input type="checkbox" name="roles" th:value="${role.getName()}" th:text="${role.getName()}">
+                                </label>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </tr>
 </table>
+
 <br/>
 <br/>
 </td>
@@ -46,5 +98,9 @@
 </td>
 <a type="button" th:href="@{/}"> Выход </a>
 </td>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
 </body>
 </html>
