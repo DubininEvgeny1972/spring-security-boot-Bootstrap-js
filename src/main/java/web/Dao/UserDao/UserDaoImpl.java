@@ -1,10 +1,9 @@
-package web.Repository.UserRepository;
+package web.Dao.UserDao;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import web.model.Role;
 import web.model.User;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public class UsersRepositoryImpl implements UsersRepository {
+public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager em;
 
@@ -47,7 +46,18 @@ public class UsersRepositoryImpl implements UsersRepository {
                 .getSingleResult();
     }
 
-    public void updateUser(User user) {
+    public void updateUser(User user, Set<Role> roles) {
+        if (roles.size() != 0) {
+            Set<Role> roleForUpdateUser = new HashSet<>();
+            for(Role role: roles) {
+                roleForUpdateUser.add(em.createQuery("SELECT r FROM Role r WHERE r.name=:name", Role.class)
+                        .setParameter("name", role.toString())
+                        .getSingleResult());
+            }
+            user.setRoles(roleForUpdateUser);
+        } else {
+            user.setRoles(getById(user.getId()).getRoles());
+        }
         em.merge(user);
     }
 

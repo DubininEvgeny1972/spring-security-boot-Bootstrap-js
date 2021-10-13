@@ -31,6 +31,16 @@
     <input type="text" th:field="*{password}" id="password">
     <br/>
     <br/>
+    <legend>_________________________________________________________________________________</legend>
+    <legend>Выберите права для пользователя (отсутствие выбора означает оставить старые права)</legend>
+    <br/>
+    <div  th:each="role : ${user.getRoles()}">
+        <label>
+            <input type="checkbox" name="roles" th:value="${role.getName()}" th:text="${role.getName()}">
+        </label>
+    </div>
+    <br/>
+    <br/>
     <input type="submit" value=" Ok ">
 </form>
 <br/>

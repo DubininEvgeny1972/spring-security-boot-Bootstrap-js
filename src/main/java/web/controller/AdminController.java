@@ -35,13 +35,15 @@ public class AdminController {
 
     @GetMapping("/{id}/edit")
     public String edit(ModelMap model, @PathVariable("id") long id) {
-        model.addAttribute("user", service.getById(id));
+        User editUser = service.getById(id);
+        editUser.setRoles(roleService.getAllRoles());
+        model.addAttribute("user", editUser);
         return "edit";
     }
 
     @PatchMapping("/{id}")
     public String editUser(@ModelAttribute("user") User user) {
-        service.updateUser(user);
+        service.updateUser(user, user.getRoles());
         return "redirect:/admin/adminpage";
     }
 

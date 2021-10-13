@@ -1,4 +1,4 @@
-package web.Repository.UserRepository;
+package web.Dao.UserDao;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import web.model.Role;
@@ -6,7 +6,7 @@ import web.model.User;
 import java.util.List;
 import java.util.Set;
 
-public interface UsersRepository {
+public interface UserDao {
 
     User getById(Long id);
 
@@ -20,5 +20,5 @@ public interface UsersRepository {
 
     void saveUser(User user, Set<Role> roles);
 
-    void updateUser(User user);
+    void updateUser(User user, Set<Role> roles);
 }

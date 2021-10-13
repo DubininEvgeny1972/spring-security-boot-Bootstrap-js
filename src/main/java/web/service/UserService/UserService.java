@@ -21,5 +21,5 @@ public interface UserService extends UserDetailsService {
 
     List<User> findAll();
 
-    void updateUser(User user);
+    void updateUser(User user, Set<Role> roles);
 }
