@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -24,12 +28,16 @@ public class AdminController {
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model) {
         model.addAttribute("users", service.findAll());
+
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "shouallwuser";
     }
 
     @GetMapping("/{id}/deleteUser")
-    public String deleteUser(@PathVariable("id") long id){
-        service.removeUserById(id);
+    public String deleteUser(@ModelAttribute("user") User user){
+        System.out.println("????????????????????????????");
+        System.out.println(user.getId());
+        service.removeUserById(user.getId());
         return "redirect:/admin/adminpage";
     }
 
@@ -42,8 +50,19 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user) {
-        service.updateUser(user, user.getRoles());
+    public String editUser(@ModelAttribute("user") User user) { //, @ModelAttribute("roles") Set<Role> roles
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println(user);
+//        if (roles.size() != 0) {
+//            Set<Role> roleForUpdateUser = new HashSet<>();
+//            for(Role role: roles) {
+//                roleForUpdateUser.add(roleService.findRole(role));
+//            }
+//            user.setRoles(roleForUpdateUser);
+//        } else {
+//            user.setRoles(service.getById(user.getId()).getRoles());
+//        }
+//        service.updateUser(user);
         return "redirect:/admin/adminpage";
     }
 
@@ -56,7 +75,19 @@ public class AdminController {
 
     @PostMapping("/createuser")
     public String createNewUser(@ModelAttribute("user") User user, ModelMap model) {
-        service.saveUser(user, user.getRoles());
+        Set<Role> roleForSaveUser = new HashSet<>();
+        if (user.getRoles().size() != 0) {
+            for(Role role: user.getRoles()) {
+                roleForSaveUser.add(roleService.findRole(role));
+            }
+            user.setRoles(roleForSaveUser);
+        } else {
+            Role rol = roleService.findRole(new Role("ROLE_USER"));
+            roleForSaveUser.add(rol);
+            user.setRoles(roleForSaveUser);
+        }
+
+        service.saveUser(user);
         model.addAttribute("users", service.findAll());
         return "redirect:/admin/adminpage";
     }

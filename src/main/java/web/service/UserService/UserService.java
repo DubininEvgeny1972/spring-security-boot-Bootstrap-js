@@ -15,11 +15,11 @@ public interface UserService extends UserDetailsService {
 
     User getById(Long id);
 
-    void saveUser(User user, Set<Role> roles);
+    void saveUser(User user);
 
     void removeUserById(long id);
 
     List<User> findAll();
 
-    void updateUser(User user, Set<Role> roles);
+    void updateUser(User user);
 }

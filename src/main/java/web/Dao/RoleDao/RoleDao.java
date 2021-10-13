@@ -8,4 +8,6 @@ public interface RoleDao {
 
     Set<Role> getAllRoles();
 
+    Role findRole(Role role);
+
 }

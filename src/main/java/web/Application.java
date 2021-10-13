@@ -43,7 +43,9 @@ public class Application {
         setStartRoles.add(role1);
         setStartRoles.add(role2);
         roleService.saveRole(setStartRoles);
-        userService.saveUser(user1, roleService.getAllRoles());
-        userService.saveUser(user2, roleService.getAllRoles().stream().limit(1).collect(Collectors.toSet()));
+        user1.setRoles(roleService.getAllRoles());
+        userService.saveUser(user1);
+        user2.setRoles(roleService.getAllRoles().stream().limit(1).collect(Collectors.toSet()));
+        userService.saveUser(user2);
     }
 }

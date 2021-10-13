@@ -42,9 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user, Set<Role> roles){
+    public void saveUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.saveUser(user, roles);
+        userDao.saveUser(user);
     }
 
     @Override
@@ -58,10 +58,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, Set<Role> roles) {
+    public void updateUser(User user) {
         if (!user.getPassword().equals(userDao.getById(user.getId()).getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        userDao.updateUser(user, roles);
+        userDao.updateUser(user);
     }
 }

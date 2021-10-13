@@ -32,12 +32,15 @@
     <br/>
     <br/>
     <legend>_________________________________________________________________________________</legend>
-    <legend>Выберите роли для пользователя (отсутствие выбора означает оставить старые права)</legend>
+    <legend>Выберите права для пользователя (отсутствие выбора означает оставить старые права)</legend>
     <br/>
-    <div  th:each="role : ${user.getRoles()}">
-        <label>
-            <input type="checkbox" name="roles" th:value="${role.getName()}" th:text="${role.getName()}">
-        </label>
+    <div>
+        <select name="roles" multiple required size="6">
+            <option disabled selected>select role</option>
+            <div  th:each="role : ${user.getRoles()}">
+                <option th:text="${role.getName()}" th:value="${role.getName()}" name="roles"/>
+            </div>
+        </select>
     </div>
     <br/>
     <br/>

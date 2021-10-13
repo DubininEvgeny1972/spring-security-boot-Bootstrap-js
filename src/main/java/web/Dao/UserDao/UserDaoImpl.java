@@ -46,18 +46,7 @@ public class UserDaoImpl implements UserDao {
                 .getSingleResult();
     }
 
-    public void updateUser(User user, Set<Role> roles) {
-        if (roles.size() != 0) {
-            Set<Role> roleForUpdateUser = new HashSet<>();
-            for(Role role: roles) {
-                roleForUpdateUser.add(em.createQuery("SELECT r FROM Role r WHERE r.name=:name", Role.class)
-                        .setParameter("name", role.toString())
-                        .getSingleResult());
-            }
-            user.setRoles(roleForUpdateUser);
-        } else {
-            user.setRoles(getById(user.getId()).getRoles());
-        }
+    public void updateUser(User user) {
         em.merge(user);
     }
 
@@ -69,15 +58,8 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public void saveUser(User user, Set<Role> roles) {
+    public void saveUser(User user) {
         em.persist(user);
-        Set<Role> roleForSaveUser = new HashSet<>();
-        for(Role role: roles) {
-            roleForSaveUser.add(em.createQuery("SELECT r FROM Role r WHERE r.name=:name", Role.class)
-                    .setParameter("name", role.toString())
-                    .getSingleResult());
-        }
-        user.setRoles(roleForSaveUser);
     }
 
     @Override
