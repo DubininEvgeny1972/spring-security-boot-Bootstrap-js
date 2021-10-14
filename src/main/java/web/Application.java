@@ -28,13 +28,13 @@ public class Application {
         user1.setName("Bob");
         user1.setLastName("Dillan");
         user1.setAge((byte) 48);
-        user1.setLogin("111");
+        user1.setLogin("111@mail.ru");
         user1.setPassword("111");
         User user2 = new User();
         user2.setName("Susana");
         user2.setLastName("Marpl");
         user2.setAge((byte) 35);
-        user2.setLogin("222");
+        user2.setLogin("222@mail.ru");
         user2.setPassword("222");
 
         Role role1 = new Role("ROLE_ADMIN");

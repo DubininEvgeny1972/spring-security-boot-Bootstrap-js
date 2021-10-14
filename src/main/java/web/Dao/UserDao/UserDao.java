@@ -12,8 +12,6 @@ public interface UserDao {
 
     User getUserByUsername(String userName);
 
-    UserDetails loadUserByUsername(String userName);
-
     void removeUserById(long id);
 
     List<User> findAll();

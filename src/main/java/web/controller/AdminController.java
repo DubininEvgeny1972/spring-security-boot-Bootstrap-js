@@ -28,16 +28,12 @@ public class AdminController {
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model) {
         model.addAttribute("users", service.findAll());
-
-        model.addAttribute("allRoles", roleService.getAllRoles());
         return "shouallwuser";
     }
 
     @GetMapping("/{id}/deleteUser")
-    public String deleteUser(@ModelAttribute("user") User user){
-        System.out.println("????????????????????????????");
-        System.out.println(user.getId());
-        service.removeUserById(user.getId());
+    public String deleteUser(@PathVariable("id") long id){
+        service.removeUserById(id);
         return "redirect:/admin/adminpage";
     }
 
@@ -50,19 +46,17 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user) { //, @ModelAttribute("roles") Set<Role> roles
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(user);
-//        if (roles.size() != 0) {
-//            Set<Role> roleForUpdateUser = new HashSet<>();
-//            for(Role role: roles) {
-//                roleForUpdateUser.add(roleService.findRole(role));
-//            }
-//            user.setRoles(roleForUpdateUser);
-//        } else {
-//            user.setRoles(service.getById(user.getId()).getRoles());
-//        }
-//        service.updateUser(user);
+    public String editUser(@ModelAttribute("user") User user) {
+        if (user.getRoles().size() != 0) {
+            Set<Role> roleForUpdateUser = new HashSet<>();
+            for(Role role: user.getRoles()) {
+                roleForUpdateUser.add(roleService.findRole(role));
+            }
+            user.setRoles(roleForUpdateUser);
+        } else {
+            user.setRoles(service.getById(user.getId()).getRoles());
+        }
+        service.updateUser(user);
         return "redirect:/admin/adminpage";
     }
 
