@@ -29,6 +29,7 @@ public class AdminController {
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model, Principal principal) {
         User userNew = new User();
+        userNew.setName("Duba");
         model.addAttribute("userNew", userNew);
         model.addAttribute("users", userService.findAll());
         model.addAttribute("allRoles", roleService.getAllRoles());
@@ -81,7 +82,9 @@ public class AdminController {
     }
 
     @PostMapping("/createuser")
-    public String createNewUser(@ModelAttribute("user") User user, ModelMap model) {
+    public String createNewUser(@ModelAttribute("userNew") User user, ModelMap model, @ModelAttribute("name") String name, @PathVariable("name") String name1) {
+        System.out.println("1111111111111111111111111111    " + name);
+        System.out.println("22222222222222222222222222222    " + name1);
         Set<Role> roleForSaveUser = new HashSet<>();
         if (user.getRoles().size() != 0) {
             for(Role role: user.getRoles()) {

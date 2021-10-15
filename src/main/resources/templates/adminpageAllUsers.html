@@ -110,6 +110,9 @@
                                                                                     <div class="controls">
                                                                                         <input class="form-control col-xs-12" type="text" id="name" th:value="*{name}" >
                                                                                     </div>
+                                                                                    <a th:text="${thisUser.getName()}"></a>
+                                                                                    <a th:text="${thisUser.getLastName()}"></a>
+                                                                                    <a th:text="${thisUser.getLogin()}"></a>
                                                                                     <label for="lastname" class="font-weight-bold">Last Name</label>
                                                                                     <div class="controls">
                                                                                         <input class="form-control col-xs-12" type="text" id="lastname" th:value="*{lastName}">
@@ -229,7 +232,9 @@
                                             <div class="card-body text-center">
                                                 <div class="form justify-content-center mx-auto col-md-3">
                                                     <form th:method="POST" th:action="@{/admin/createuser}" th:object="${userNew}">
+                                                        <div>
                                                         <label for="nameAdd" class="font-weight-bold">First Name</label>
+                                                        <a th:text="${userNew.getName()}"></a>
                                                         <div class="controls">
                                                             <input class="form-control col-xs-12" type="text" id="nameAdd" th:id="name" >
                                                         </div>
@@ -259,6 +264,7 @@
                                                             </select>
                                                         </div>
                                                         <button type="submit" class="btn btn-success">Add new user</button>
+                                                        </div>
                                                     </form>
                                                 </div>
                                             </div>
