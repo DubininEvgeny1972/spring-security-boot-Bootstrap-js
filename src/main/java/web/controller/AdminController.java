@@ -28,8 +28,8 @@ public class AdminController {
 
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model, Principal principal) {
-        Boolean isAdmin = userService.getUserByUsername(principal.getName()).getRoles().contains("ROLE_ADMIN");
-        model.addAttribute("isAdmin", isAdmin);
+        User userNew = new User();
+        model.addAttribute("userNew", userNew);
         model.addAttribute("users", userService.findAll());
         model.addAttribute("allRoles", roleService.getAllRoles());
         model.addAttribute("thisUser", userService.getUserByUsername(principal.getName()));
@@ -57,7 +57,9 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user) {
+    public String editUser(@ModelAttribute("user") User user, @ModelAttribute("thisUser") User thisUser) {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + user);
+        System.out.println("???????????????????????????????   " + thisUser);
         if (user.getRoles().size() != 0) {
             Set<Role> roleForUpdateUser = new HashSet<>();
             for(Role role: user.getRoles()) {
