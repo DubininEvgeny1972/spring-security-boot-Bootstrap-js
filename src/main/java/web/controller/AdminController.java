@@ -17,32 +17,40 @@ import java.util.Set;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserService service;
+    private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
-    public AdminController(UserService service, RoleService roleService) {
-        this.service = service;
+    public AdminController(UserService userService, RoleService roleService) {
+        this.userService = userService;
         this.roleService = roleService;
     }
 
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model, Principal principal) {
-        model.addAttribute("users", service.findAll());
+        Boolean isAdmin = userService.getUserByUsername(principal.getName()).getRoles().contains("ROLE_ADMIN");
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("users", userService.findAll());
         model.addAttribute("allRoles", roleService.getAllRoles());
-        model.addAttribute("thisUser", service.getUserByUsername(principal.getName()));
-        return "adminpage";
+        model.addAttribute("thisUser", userService.getUserByUsername(principal.getName()));
+        return "adminpageAllUsers";
+    }
+
+    @GetMapping(value = "/adminuser")
+    public String ShowAdminUser(ModelMap model, Principal principal) {
+        model.addAttribute("thisUser", userService.getUserByUsername(principal.getName()));
+        return "adminpageThisUser";
     }
 
     @GetMapping("/{id}/deleteUser")
     public String deleteUser(@PathVariable("id") long id){
-        service.removeUserById(id);
+        userService.removeUserById(id);
         return "redirect:/admin/adminpage";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(ModelMap model, @PathVariable("id") long id) {
-        User editUser = service.getById(id);
+        User editUser = userService.getById(id);
         editUser.setRoles(roleService.getAllRoles());
         model.addAttribute("user", editUser);
         return "edit";
@@ -57,9 +65,9 @@ public class AdminController {
             }
             user.setRoles(roleForUpdateUser);
         } else {
-            user.setRoles(service.getById(user.getId()).getRoles());
+            user.setRoles(userService.getById(user.getId()).getRoles());
         }
-        service.updateUser(user);
+        userService.updateUser(user);
         return "redirect:/admin/adminpage";
     }
 
@@ -84,8 +92,8 @@ public class AdminController {
             user.setRoles(roleForSaveUser);
         }
 
-        service.saveUser(user);
-        model.addAttribute("users", service.findAll());
+        userService.saveUser(user);
+        model.addAttribute("users", userService.findAll());
         return "redirect:/admin/adminpage";
     }
 }
