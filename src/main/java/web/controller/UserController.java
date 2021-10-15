@@ -23,6 +23,10 @@ public class UserController {
     public Object getAuthentication(@CurrentSecurityContext(expression = "authentication")
                                                 Authentication authentication,
                                                 Model model) {
+        String loginUser = userService.getUserByUsername(authentication.getName()).getLogin();
+        String rolesUser = " with roles: " + userService.getUserByUsername(authentication.getName()).getRoles().toString();
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("rolesUser", rolesUser);
         model.addAttribute("showUser", userService.getUserByUsername(authentication.getName()));
         return "thisuser";
     }

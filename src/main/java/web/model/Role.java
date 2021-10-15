@@ -35,7 +35,9 @@ public class Role implements GrantedAuthority {
         return getName();
     }
     @Override
-    public String toString() {
-        return name;
+    public String toString()
+    {
+        String nameRole = name.substring(5);
+        return nameRole;
     }
 }

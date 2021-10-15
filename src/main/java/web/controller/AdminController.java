@@ -9,6 +9,7 @@ import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,9 +27,11 @@ public class AdminController {
     }
 
     @GetMapping(value = "/adminpage")
-    public String ShowAdminPage(ModelMap model) {
+    public String ShowAdminPage(ModelMap model, Principal principal) {
         model.addAttribute("users", service.findAll());
-        return "shouallwuser";
+        model.addAttribute("allRoles", roleService.getAllRoles());
+        model.addAttribute("thisUser", service.getUserByUsername(principal.getName()));
+        return "adminpage";
     }
 
     @GetMapping("/{id}/deleteUser")

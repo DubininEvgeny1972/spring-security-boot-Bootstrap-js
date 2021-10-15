@@ -19,6 +19,25 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager em;
 
+    private List<GrantedAuthority> getAuthoritiesEntities(Set<Role> userRoles) {
+        Set<GrantedAuthority> roles = new HashSet<>();
+        userRoles.forEach((role) -> {
+            roles.add(new SimpleGrantedAuthority(role.getName()));
+        });
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);
+        return grantedAuthorities;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User myUser= getUserByUsername(userName);
+        if (myUser == null) {
+            throw new UsernameNotFoundException("Unknown user: "+userName);
+        }
+        List<GrantedAuthority> roleList = getAuthoritiesEntities(myUser.getRoles());
+        org.springframework.security.core.userdetails.User usd = new org.springframework.security.core.userdetails.User(myUser.getLogin(), myUser.getPassword(), roleList);
+        return usd;
+    }
 
     @Override
     public User getUserByUsername(String userName) {
