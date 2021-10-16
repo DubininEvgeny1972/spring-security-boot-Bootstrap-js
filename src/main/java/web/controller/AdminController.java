@@ -37,12 +37,6 @@ public class AdminController {
         return "adminpageAllUsers";
     }
 
-    @GetMapping(value = "/adminuser")
-    public String ShowAdminUser(ModelMap model, Principal principal) {
-        model.addAttribute("thisUser", userService.getUserByUsername(principal.getName()));
-        return "adminpageThisUser";
-    }
-
     @GetMapping("/{id}/deleteUser")
     public String deleteUser(@PathVariable("id") long id){
         userService.removeUserById(id);

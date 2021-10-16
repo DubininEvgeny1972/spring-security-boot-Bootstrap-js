@@ -22,21 +22,14 @@
 <main>
     <div class="jumbotron">
         <div class="row">
-            <div class="col-md-1 bg-white"
-                 style="padding-top: 20px;
-                        padding-left: 0px;
-                        padding-right: 0px;
-                        height: 100vh">
-
+            <div class="col-md-1 bg-white" style="padding-top: 20px; padding-left: 0px; padding-right: 0px; height: 100vh">
                 <!--навигация слева-->
                 <ul class="nav nav-pills flex-column">
-                    <div>
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab">Admin</a>
-                        </li>
-                    </div >
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/adminuser">User</a>
+                        <a class="nav-link active" data-toggle="tab" href="#AllUsers">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#AdminTable">User</a>
                     </li>
                 </ul>
             </div>
@@ -44,7 +37,7 @@
                  style="padding-top: 20px;
                         height: 100vh">
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="Admin">
+                    <div class="tab-pane fade show active" id="AllUsers">
                         <h2 class="h2">Admin panel</h2>
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
@@ -150,7 +143,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </td>
                                                 <td>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#modalDelete" th:attrappend="data-target=${user.id}">Delete</a>
@@ -223,7 +215,7 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <!--                            вкладка New User-->
                             <div class="tab-pane fade" id="NewUser">
                                 <div class="form-group col-xs-12">
                                     <div class="control-group required">
@@ -257,7 +249,7 @@
                                                         <div class="controls">
                                                             <label for="login1" class="font-weight-bold">Role</label>
                                                             <br>
-                                                            <select multiple required size="6">
+                                                            <select multiple required size="2">
                                                                 <div  th:each="role : ${allRoles}">
                                                                     <option th:text="${role.getName()}" th:value="${role.getName()}"/>
                                                                 </div>
@@ -271,6 +263,36 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="AdminTable">
+                        <h2 class="h2">User infirmation-page</h2>
+                        <div class="card">
+                            <h5 class="card-header">About user</h5>
+                            <div class="card-body text-center">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user, state : ${thisUser}">
+                                        <td th:text="${thisUser.getName}"></td>
+                                        <td th:text="${thisUser.getName()}"></td>
+                                        <td th:text="${thisUser.getLastName()}"></td>
+                                        <td th:text="${thisUser.getAge()}"></td>
+                                        <td th:text="${thisUser.getLogin()}"></td>
+                                        <td th:utext="${#strings.arrayJoin(thisUser.getAuthorities(), ' ')}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
