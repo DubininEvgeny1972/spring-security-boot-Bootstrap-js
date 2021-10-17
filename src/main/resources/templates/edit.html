@@ -9,10 +9,9 @@
 
 <br/>
 <br/>
-<form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/{id}(id=${userEdit.getId()})}" th:object="${userEdit}">
     <label for="name">Изменить имя</label>
-    <input type="hidden" th:field="*{id}" id="id">
-    <input type="text" th:field="*{name}" id="name">
+
     <br/>
     <br/>
     <label for="lastname">Изменить фамилию</label>
@@ -37,7 +36,7 @@
     <div>
         <select name="roles" multiple required size="6">
             <option disabled selected>select role</option>
-            <div  th:each="role : ${user.getRoles()}">
+            <div  th:each="role : ${userEdit.getRoles()}">
                 <option th:text="${role.getName()}" th:value="${role.getName()}" name="roles"/>
             </div>
         </select>

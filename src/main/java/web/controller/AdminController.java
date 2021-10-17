@@ -28,8 +28,17 @@ public class AdminController {
 
     @GetMapping(value = "/adminpage")
     public String ShowAdminPage(ModelMap model, Principal principal) {
+        StringBuilder roles = new StringBuilder();
+        for (Role role: userService.getUserByUsername(principal.getName()).getRoles()){
+            roles.append(role.getName()).append(" ");
+        }
         User userNew = new User();
-        userNew.setName("Duba");
+        userNew.setName("1");
+        userNew.setLastName("1");
+        userNew.setAge((byte)0);
+        userNew.setLogin("444@444.ru");
+        userNew.setPassword("444");
+        model.addAttribute("rolesUser", roles.toString());
         model.addAttribute("userNew", userNew);
         model.addAttribute("users", userService.findAll());
         model.addAttribute("allRoles", roleService.getAllRoles());
@@ -47,14 +56,15 @@ public class AdminController {
     public String edit(ModelMap model, @PathVariable("id") long id) {
         User editUser = userService.getById(id);
         editUser.setRoles(roleService.getAllRoles());
-        model.addAttribute("user", editUser);
+        model.addAttribute("editUser", editUser);
         return "edit";
     }
 
     @PatchMapping("/{id}")
-    public String editUser(@ModelAttribute("user") User user, @ModelAttribute("thisUser") User thisUser) {
+    public String editUser(@ModelAttribute("user") User user) {
         System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + user);
-        System.out.println("???????????????????????????????   " + thisUser);
+        User editUser = userService.getById(user.getId());
+        System.out.println(editUser);
         if (user.getRoles().size() != 0) {
             Set<Role> roleForUpdateUser = new HashSet<>();
             for(Role role: user.getRoles()) {
@@ -76,9 +86,8 @@ public class AdminController {
     }
 
     @PostMapping("/createuser")
-    public String createNewUser(@ModelAttribute("userNew") User user, ModelMap model, @ModelAttribute("name") String name, @PathVariable("name") String name1) {
-        System.out.println("1111111111111111111111111111    " + name);
-        System.out.println("22222222222222222222222222222    " + name1);
+    public String createNewUser(@ModelAttribute("userNew") User user, ModelMap model) {
+        System.out.println("1111111111111111111111111111    " + user);
         Set<Role> roleForSaveUser = new HashSet<>();
         if (user.getRoles().size() != 0) {
             for(Role role: user.getRoles()) {

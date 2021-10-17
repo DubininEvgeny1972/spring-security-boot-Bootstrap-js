@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import web.model.Role;
 import web.service.UserService.UserService;
 
 @Controller
@@ -23,10 +24,11 @@ public class UserController {
     public Object getAuthentication(@CurrentSecurityContext(expression = "authentication")
                                                 Authentication authentication,
                                                 Model model) {
-        String loginUser = userService.getUserByUsername(authentication.getName()).getLogin();
-        String rolesUser = " with roles: " + userService.getUserByUsername(authentication.getName()).getRoles().toString();
-        model.addAttribute("loginUser", loginUser);
-        model.addAttribute("rolesUser", rolesUser);
+        StringBuilder roles = new StringBuilder();
+        for (Role role: userService.getUserByUsername(authentication.getName()).getRoles()){
+            roles.append(role.getName()).append(" ");
+        }
+        model.addAttribute("rolesUser", roles.toString());
         model.addAttribute("showUser", userService.getUserByUsername(authentication.getName()));
         return "thisuser";
     }
