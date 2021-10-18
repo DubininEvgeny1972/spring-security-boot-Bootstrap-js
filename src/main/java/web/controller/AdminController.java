@@ -63,7 +63,6 @@ public class AdminController {
         Set<Role> roleForSaveUser = new HashSet<>();
         user.getRoles().forEach((element) -> roleForSaveUser.add(roleService.findRole(element)));
         user.setRoles(roleForSaveUser);
-        System.out.println(user);
         userService.saveUser(user);
         model.addAttribute("users", userService.findAll());
         return "redirect:/admin/adminpage";
