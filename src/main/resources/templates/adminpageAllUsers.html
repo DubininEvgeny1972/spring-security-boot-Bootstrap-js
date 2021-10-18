@@ -101,19 +101,19 @@
                                                                                     <div class="controls">
                                                                                         <label for="id" class="font-weight-bold">ID<input class="form-control"type="text" id="id" th:value="*{id}" disabled></label>
                                                                                         <h1></h1>
-                                                                                        <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" name="name" th:value="*{name}"></label>
+                                                                                        <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" name="name" th:value="*{name}" required></label>
                                                                                         <h1></h1>
-                                                                                        <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" name="lastName" th:value="*{lastName}"></label>
+                                                                                        <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" name="lastName" th:value="*{lastName}" required></label>
                                                                                         <h1></h1>
-                                                                                        <label th:for="age" class="font-weight-bold">Age<input class="form-control" type="text" name="age" th:value="*{age}"></label>
+                                                                                        <label th:for="age" class="font-weight-bold">Age<input class="form-control" type="number" step="1"  min="0" name="age" th:value="*{age}" required></label>
                                                                                         <h1></h1>
-                                                                                        <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" name="login" th:value="*{login}"></label>
+                                                                                        <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" name="login" th:value="*{login}" required></label>
                                                                                         <h1></h1>
                                                                                         <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="text" name="password"></label>
                                                                                         <h1></h1>
                                                                                         <label class="font-weight-bold">Role</label>
                                                                                         <div>
-                                                                                            <select class="form-control" name="roles" multiple required size="2">
+                                                                                            <select class="form-control" name="roles" multiple size="2">
                                                                                                 <div  th:each="role : ${allRoles}">
                                                                                                     <option th:text="${role.getName()}" th:value="${role.getName()}" name="roles"/>
                                                                                                 </div>
@@ -201,11 +201,11 @@
                                                 <div class="form justify-content-center mx-auto col-md-3">
                                                     <form th:method="POST" th:action="@{/admin/createuser}" th:object="${userNew}">
                                                         <div class="col-md-8">
-                                                            <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" name="name" th:id="name" placeholder="First Name"></label>
-                                                            <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" name="lastName" th:id="lastName" placeholder="Last Name"></label>
-                                                            <label th:for="age" class="font-weight-bold">Age<input class="form-control" type="text" name="age" th:id="age" placeholder="Age"></label>
-                                                            <label th:for="login" class="font-weight-bold">Email<input class="form-control" type="text" name="login" th:id="login" placeholder="Email"></label>
-                                                            <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="text" name="password" th:id="password" placeholder="Password"></label>
+                                                            <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" name="name" th:id="name" placeholder="First Name"  required></label>
+                                                            <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" name="lastName" th:id="lastName" placeholder="Last Name"  required></label>
+                                                            <label th:for="age" class="font-weight-bold">Age<input class="form-control" type="number" min="0" name="age" th:id="age" placeholder="Age"  required></label>
+                                                            <label th:for="login" class="font-weight-bold">Email<input class="form-control" type="text" name="login" th:id="login" placeholder="Email"  required></label>
+                                                            <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="text" name="password" th:id="password" placeholder="Password"  required></label>
                                                             <h1></h1>
                                                             <label class="font-weight-bold">Role</label>
                                                             <div>
