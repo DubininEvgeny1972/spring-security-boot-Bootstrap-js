@@ -41,7 +41,7 @@
                         height: 100vh">
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="Admin">
-                        <h2 class="h2">User infirmation-page</h2>
+                        <h2 class="h2">User information-page</h2>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="UsersTable">
                                 <div class="card">
@@ -60,7 +60,7 @@
                                             </thead>
                                             <tbody>
                                             <tr th:each="user, state : ${showUser}">
-                                                <td th:text="${showUser.getName}"></td>
+                                                <td th:text="${showUser.getId}"></td>
                                                 <td th:text="${showUser.getName()}"></td>
                                                 <td th:text="${showUser.getLastName()}"></td>
                                                 <td th:text="${showUser.getAge()}"></td>

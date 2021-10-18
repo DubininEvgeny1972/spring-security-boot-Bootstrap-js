@@ -36,12 +36,6 @@ public class Application {
         user2.setAge((byte) 35);
         user2.setLogin("222@mail.ru");
         user2.setPassword("222");
-        User user3 = new User();
-        user3.setName("Kirk");
-        user3.setLastName("Duglass");
-        user3.setAge((byte) 55);
-        user3.setLogin("333@mail.ru");
-        user3.setPassword("333");
 
         Role role1 = new Role("ROLE_ADMIN");
         Role role2 = new Role("ROLE_USER");
@@ -53,7 +47,5 @@ public class Application {
         userService.saveUser(user1);
         user2.setRoles(roleService.getAllRoles().stream().limit(1).collect(Collectors.toSet()));
         userService.saveUser(user2);
-        user3.setRoles(roleService.getAllRoles().stream().skip(1).collect(Collectors.toSet()));
-        userService.saveUser(user3);
     }
 }

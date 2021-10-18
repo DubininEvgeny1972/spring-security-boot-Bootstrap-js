@@ -2,10 +2,8 @@ package web.service.UserService;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import web.model.Role;
 import web.model.User;
 import java.util.List;
-import java.util.Set;
 
 public interface UserService extends UserDetailsService {
 

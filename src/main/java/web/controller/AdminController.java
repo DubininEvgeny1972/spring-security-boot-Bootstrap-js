@@ -8,7 +8,6 @@ import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
-
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,28 +41,15 @@ public class AdminController {
 
     @GetMapping("/{id}/deleteUser")
     public String deleteUser(@PathVariable("id") long id){
-        userService.removeUserById(id);
+          userService.removeUserById(id);
         return "redirect:/admin/adminpage";
     }
 
-//    @GetMapping("/{id}/edit")
-//    public String edit(ModelMap model, @PathVariable("id") long id) {
-//        User editUser = userService.getById(id);
-//        editUser.setRoles(roleService.getAllRoles());
-//        model.addAttribute("editUser", editUser);
-//        return "edit";
-//    }
-
     @PatchMapping("/{id}")
     public String editUser(@ModelAttribute("user") User user) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + user);
-        User editUser = userService.getById(user.getId());
-        System.out.println(editUser);
         if (user.getRoles().size() != 0) {
             Set<Role> roleForUpdateUser = new HashSet<>();
-            for(Role role: user.getRoles()) {
-                roleForUpdateUser.add(roleService.findRole(role));
-            }
+            user.getRoles().forEach((element) -> roleForUpdateUser.add(roleService.findRole(element)));
             user.setRoles(roleForUpdateUser);
         } else {
             user.setRoles(userService.getById(user.getId()).getRoles());
@@ -71,28 +57,13 @@ public class AdminController {
         userService.updateUser(user);
         return "redirect:/admin/adminpage";
     }
-//
-//    @GetMapping("/adduser")
-//    public String addUser(@ModelAttribute("user") User user, ModelMap model){
-//        user.setRoles(roleService.getAllRoles());
-//        model.addAttribute("user", user);
-//        return "new";
-//    }
 
     @PostMapping("/createuser")
     public String createNewUser(@ModelAttribute("user") User user, ModelMap model) {
-        System.out.println("1111111111111111111111111111    " + user);
         Set<Role> roleForSaveUser = new HashSet<>();
-        if (user.getRoles().size() != 0) {
-            for(Role role: user.getRoles()) {
-                roleForSaveUser.add(roleService.findRole(role));
-            }
-            user.setRoles(roleForSaveUser);
-        } else {
-            Role rol = roleService.findRole(new Role("ROLE_USER"));
-            roleForSaveUser.add(rol);
-            user.setRoles(roleForSaveUser);
-        }
+        user.getRoles().forEach((element) -> roleForSaveUser.add(roleService.findRole(element)));
+        user.setRoles(roleForSaveUser);
+        System.out.println(user);
         userService.saveUser(user);
         model.addAttribute("users", userService.findAll());
         return "redirect:/admin/adminpage";

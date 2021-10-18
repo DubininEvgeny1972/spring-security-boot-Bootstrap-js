@@ -39,6 +39,7 @@
                  style="padding-top: 20px;
                         height: 100vh">
                 <div class="tab-content">
+<!--                    Основная вкладка админа-->
                     <div class="tab-pane fade show active" id="AllUsers">
                         <h2 class="h2">Admin panel</h2>
                         <ul class="nav nav-tabs">
@@ -77,7 +78,6 @@
                                                 <td th:utext="${#strings.arrayJoin(user.getRoles(), ' ')}"></td>
                                                 <td>
                                                     <a class="btn btn-info" role="button" data-toggle="modal" data-target="#modalEdit" th:attrappend="data-target=${user.id}">Edit</a>
-
                                                     <!--модальное окно редактирования-->
                                                     <div class="modal fade" id="modalEdit" th:attrappend="id=${user.id}"
                                                          tabindex="-1" role="dialog"
@@ -227,8 +227,9 @@
                             </div>
                         </div>
                     </div>
+<!--                    Вкладка юзер для админа-->
                     <div class="tab-pane fade" id="AdminTable">
-                        <h2 class="h2">User infirmation-page</h2>
+                        <h2 class="h2">User information-page</h2>
                         <div class="card">
                             <h5 class="card-header">About user</h5>
                             <div class="card-body text-center">
@@ -245,7 +246,7 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="user, state : ${thisUser}">
-                                        <td th:text="${thisUser.getName}"></td>
+                                        <td th:text="${thisUser.getId}"></td>
                                         <td th:text="${thisUser.getName()}"></td>
                                         <td th:text="${thisUser.getLastName()}"></td>
                                         <td th:text="${thisUser.getAge()}"></td>
