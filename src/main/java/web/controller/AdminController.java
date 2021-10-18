@@ -32,14 +32,8 @@ public class AdminController {
         for (Role role: userService.getUserByUsername(principal.getName()).getRoles()){
             roles.append(role.getName()).append(" ");
         }
-        User userNew = new User();
-        userNew.setName("1");
-        userNew.setLastName("1");
-        userNew.setAge((byte)0);
-        userNew.setLogin("444@444.ru");
-        userNew.setPassword("444");
         model.addAttribute("rolesUser", roles.toString());
-        model.addAttribute("userNew", userNew);
+        model.addAttribute("userNew", new User());
         model.addAttribute("users", userService.findAll());
         model.addAttribute("allRoles", roleService.getAllRoles());
         model.addAttribute("thisUser", userService.getUserByUsername(principal.getName()));
@@ -52,13 +46,13 @@ public class AdminController {
         return "redirect:/admin/adminpage";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(ModelMap model, @PathVariable("id") long id) {
-        User editUser = userService.getById(id);
-        editUser.setRoles(roleService.getAllRoles());
-        model.addAttribute("editUser", editUser);
-        return "edit";
-    }
+//    @GetMapping("/{id}/edit")
+//    public String edit(ModelMap model, @PathVariable("id") long id) {
+//        User editUser = userService.getById(id);
+//        editUser.setRoles(roleService.getAllRoles());
+//        model.addAttribute("editUser", editUser);
+//        return "edit";
+//    }
 
     @PatchMapping("/{id}")
     public String editUser(@ModelAttribute("user") User user) {
@@ -77,16 +71,16 @@ public class AdminController {
         userService.updateUser(user);
         return "redirect:/admin/adminpage";
     }
-
-    @GetMapping("/adduser")
-    public String addUser(@ModelAttribute("user") User user, ModelMap model){
-        user.setRoles(roleService.getAllRoles());
-        model.addAttribute("user", user);
-        return "new";
-    }
+//
+//    @GetMapping("/adduser")
+//    public String addUser(@ModelAttribute("user") User user, ModelMap model){
+//        user.setRoles(roleService.getAllRoles());
+//        model.addAttribute("user", user);
+//        return "new";
+//    }
 
     @PostMapping("/createuser")
-    public String createNewUser(@ModelAttribute("userNew") User user, ModelMap model) {
+    public String createNewUser(@ModelAttribute("user") User user, ModelMap model) {
         System.out.println("1111111111111111111111111111    " + user);
         Set<Role> roleForSaveUser = new HashSet<>();
         if (user.getRoles().size() != 0) {
@@ -99,7 +93,6 @@ public class AdminController {
             roleForSaveUser.add(rol);
             user.setRoles(roleForSaveUser);
         }
-
         userService.saveUser(user);
         model.addAttribute("users", userService.findAll());
         return "redirect:/admin/adminpage";
