@@ -1,39 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
 </head>
-<body class="text-center">
-<h1>Index</h1>
+<body>
 
-<!--таблица юзеров-->
-<div class="container-fluid">
 
-    <div class="d-flex justify-content-center">
-        <div>
-            <table class="table table-striped" id="mainTableWithUsers">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Login</th>
-                    <th>Password</th>
-                    <th>Age</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-1 bg-white" style="padding-top: 20px; padding-left: 0px; padding-right: 0px; height: 100vh">
+                <!--навигация слева-->
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#AllUsers">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#AdminTable">User</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-10 bg-light"
+                 style="padding-top: 20px;
+                        height: 100vh">
+                <div class="tab-content">
+<!--                    Основная вкладка админа-->
+                    <div class="tab-pane fade show active" id="AllUsers">
+                        <h2 class="h2">Admin panel</h2>
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#UsersTable">Users table</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#NewUser">New User</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="UsersTable">
+                                <div class="card">
+                                    <h5 class="card-header">All users</h5>
+                                    <div class="card-body text-center">
+                                        <table class="table table-striped" id="mainTableWithUsers">
+                                            <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Age</th>
+                                                <th>Email</th>
+                                                <th>Role</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+<!--                                            <tr th:each="user : ${users}">-->
+<!--                                                <td th:text="${user.getId()}"></td>-->
+<!--                                                <td th:text="${user.getName()}"></td>-->
+<!--                                                <td th:text="${user.getLastName()}"></td>-->
+<!--                                                <td th:text="${user.getAge()}"></td>-->
+<!--                                                <td th:text="${user.getLogin()}"></td>-->
+<!--                                                <td th:utext="${#strings.arrayJoin(user.getRoles(), ' ')}"></td>-->
+<!--&lt;!&ndash;                                                <td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <a class="btn btn-info" role="button" data-toggle="modal" data-target="#modalEdit" th:attrappend="data-target=${user.id}">Edit</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    &ndash;&gt;-->
+<!--&lt;!&ndash;                                                <td>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    <a class="btn btn-danger" role="button" data-toggle="modal" data-target="#modalDelete" th:attrappend="data-target=${user.id}">Delete</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                                                    &ndash;&gt;-->
+<!--&lt;!&ndash;                                                </td>&ndash;&gt;-->
+<!--                                            </tr>-->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<!--                    Вкладка юзер для админа-->
+<!--                    <div class="tab-pane fade" id="AdminTable">-->
+<!--                        <h2 class="h2">User information-page</h2>-->
+<!--                        <div class="card">-->
+<!--                            <h5 class="card-header">About user</h5>-->
+<!--                            <div class="card-body text-center">-->
+<!--                                <table class="table table-striped">-->
+<!--                                    <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th>ID</th>-->
+<!--                                        <th>First Name</th>-->
+<!--                                        <th>Last Name</th>-->
+<!--                                        <th>Age</th>-->
+<!--                                        <th>Email</th>-->
+<!--                                        <th>Role</th>-->
+<!--                                    </tr>-->
+<!--                                    </thead>-->
+<!--                                    <tbody>-->
+<!--                                    <tr th:each="user, state : ${thisUser}">-->
+<!--                                        <td th:text="${thisUser.getId}"></td>-->
+<!--                                        <td th:text="${thisUser.getName()}"></td>-->
+<!--                                        <td th:text="${thisUser.getLastName()}"></td>-->
+<!--                                        <td th:text="${thisUser.getAge()}"></td>-->
+<!--                                        <td th:text="${thisUser.getLogin()}"></td>-->
+<!--                                        <td th:utext="${#strings.arrayJoin(thisUser.getAuthorities(), ' ')}"></td>-->
+<!--                                    </tr>-->
+<!--                                    </tbody>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-<script src="/js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="/js/app.js"></script>
 </body>
 </html>

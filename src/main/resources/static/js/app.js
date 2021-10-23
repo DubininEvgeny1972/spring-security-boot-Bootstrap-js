@@ -32,9 +32,12 @@ async function getTableWithUsers() {
                 let tableFilling = `$(
                         <tr>
                             <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.lastName}</td>
+                            <td>${user.age}</td>
                             <td>${user.login}</td>
-                            <td>${user.password.slice(0, 15)}...</td>
-                            <td>${user.age}</td>     
+                            <td>${user.role}</td>
+                                 
                             <td>
                                 <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-outline-secondary" 
                                 data-toggle="modal" data-target="#someDefaultModal"></button>
