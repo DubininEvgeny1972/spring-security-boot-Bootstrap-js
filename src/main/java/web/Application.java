@@ -8,6 +8,7 @@ import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,16 +37,16 @@ public class Application {
         user2.setAge((byte) 35);
         user2.setLogin("222@mail.ru");
         user2.setPassword("222");
+        Role role1 = new Role("ROLE_USER");
+        Role role2 = new Role("ROLE_ADMIN");
 
-        Role role1 = new Role("ROLE_ADMIN");
-        Role role2 = new Role("ROLE_USER");
-        Set<Role> setStartRoles = new HashSet<>();
+        Set<Role> setStartRoles = new LinkedHashSet<>();
         setStartRoles.add(role1);
         setStartRoles.add(role2);
         roleService.saveRole(setStartRoles);
-        user1.setRoles(roleService.getAllRoles());
+        user1.setRoles(setStartRoles);
         userService.saveUser(user1);
-        user2.setRoles(roleService.getAllRoles().stream().limit(1).collect(Collectors.toSet()));
+        user2.setRoles(setStartRoles.stream().limit(1).collect(Collectors.toSet()));
         userService.saveUser(user2);
     }
 }
