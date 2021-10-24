@@ -1,6 +1,9 @@
 $(async function () {
     await getTableWithUsers();
-    getNewUserForm();
+    await getTableWithAdmin();
+    await getTableWithUser();
+    await getRolesByUser();
+    await thisUser();
     getDefaultModal();
     addNewUser();
 })
@@ -14,39 +17,93 @@ const userFetchService = {
     },
     // bodyAdd : async function(user) {return {'method': 'POST', 'headers': this.head, 'body': user}},
     findAllUsers: async () => await fetch('users'),
+    findAdmin: async () => await fetch('user'),
     findOneUser: async (id) => await fetch(`api/users/${id}`),
     addNewUser: async (user) => await fetch('api/users', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
     updateUser: async (user, id) => await fetch(`api/users/${id}`, {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
-    deleteUser: async (id) => await fetch(`api/users/${id}`, {method: 'DELETE', headers: userFetchService.head})
+    deleteUser: async (id) => await fetch(`/remove/${id}`, {method: 'DELETE', headers: userFetchService.head})
+}
+async function thisUser() {
+    let userFind = $('#thisUser b');
+    fetch('user')
+        .then(res => res.json())
+        .then(user => {
+            let thisUser = user.login
+            userFind.append(thisUser);
+        })
 }
 
+async function getRolesByUser() {
+    let roleFind = $('#RolesByUser c');
+    fetch('user')
+        .then(res => res.json())
+        .then(user => {
+            let rolesUser = user.roles.map(role => "  " + role.name)
+            roleFind.append(rolesUser);
+        })
+}
+
+async function getTableWithUser() {
+    let table = $('#tabUser tbody');
+    fetch('user')
+        .then(res => res.json())
+        .then(user => {
+            let tableFilling = `$(
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.lastName}</td>
+                <td>${user.age}</td>
+                <td>${user.login}</td>
+                <td> ${user.roles.map(role => "  " + role.name)}</td>
+            </tr>
+            )`;
+            table.append(tableFilling);
+        })
+}
+
+
+async function getTableWithAdmin() {
+    let table = $('#mainTableWithAdmin tbody');
+    fetch('user')
+        .then(res => res.json())
+        .then(user => {
+            let tableFilling = `$(
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.lastName}</td>
+                <td>${user.age}</td>
+                <td>${user.login}</td>
+                <td> ${user.roles.map(role => "  " + role.name)}</td>
+            </tr>
+            )`;
+            table.append(tableFilling);
+        })
+}
 async function getTableWithUsers() {
     let table = $('#mainTableWithUsers tbody');
-    // table.empty();
-    //
-    // await userFetchService.findAllUsers()
         fetch('users')
         .then(res => res.json())
         .then(users => {
             users.forEach(user => {
                 let tableFilling = `$(
-                        <tr>
-                            <td>${user.id}</td>
-                            <td>${user.name}</td>
-                            <td>${user.lastName}</td>
-                            <td>${user.age}</td>
-                            <td>${user.login}</td>
-                            <td>${user.role}</td>
-                                 
-                            <td>
-                                <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-outline-secondary" 
-                                data-toggle="modal" data-target="#someDefaultModal"></button>
-                            </td>
-                            <td>
-                                <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-outline-danger" 
-                                data-toggle="modal" data-target="#someDefaultModal"></button>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.lastName}</td>
+                        <td>${user.age}</td>
+                        <td>${user.login}</td>
+                        <td> ${user.roles.map(role => "  " + role.name)}</td>
+                        <td>
+                            <button type="button" data-userid="${user.id}" data-action="edit" class="btn btn-info" 
+                            data-toggle="modal" data-target="#someDefaultModal">Edit</button>
+                        </td>
+                        <td>
+                            <button type="button" data-userid="${user.id}" data-action="delete" class="btn btn-danger" 
+                            data-toggle="modal" data-target="#someDefaultModal">Delete</button>
+                        </td>
+                    </tr>
                 )`;
                 table.append(tableFilling);
             })
@@ -67,22 +124,6 @@ async function getTableWithUsers() {
     })
 }
 
-
-async function getNewUserForm() {
-    let button = $(`#SliderNewUserForm`);
-    let form = $(`#defaultSomeForm`)
-    button.on('click', () => {
-        if (form.attr("data-hidden") === "true") {
-            form.attr('data-hidden', 'false');
-            form.show();
-            button.text('Hide panel');
-        } else {
-            form.attr('data-hidden', 'true');
-            form.hide();
-            button.text('Show panel');
-        }
-    })
-}
 
 
 // что то деалем при открытии модалки и при закрытии
@@ -185,28 +226,37 @@ async function deleteUser(modal, id) {
 async function addNewUser() {
     $('#addNewUserButton').click(async () =>  {
         let addUserForm = $('#defaultSomeForm')
+
+        let name = addUserForm.find('#AddNewUserName').val().trim();
+        let lastName = addUserForm.find('#AddNewUserLastName').val().trim();
+        let age = addUserForm.find('#AddNewUserAge').val().trim();
         let login = addUserForm.find('#AddNewUserLogin').val().trim();
         let password = addUserForm.find('#AddNewUserPassword').val().trim();
-        let age = addUserForm.find('#AddNewUserAge').val().trim();
+
         let data = {
+            name : name,
+            lastName : lastName,
+            age: age,
             login: login,
-            password: password,
-            age: age
+            password: password
         }
-        const response = await userFetchService.addNewUser(data);
+        const response = fetch('add')(data);
         if (response.ok) {
             getTableWithUsers();
+            addUserForm.find('#AddNewUserName').val('');
+            addUserForm.find('#AddNewUserLastName').val('');
+            addUserForm.find('#AddNewUserAge').val('');
             addUserForm.find('#AddNewUserLogin').val('');
             addUserForm.find('#AddNewUserPassword').val('');
-            addUserForm.find('#AddNewUserAge').val('');
-        } else {
-            let body = await response.json();
-            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
-                            ${body.info}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>`;
+
+        // } else {
+        //     let body = await response.json();
+        //     let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
+        //                     ${body.info}
+        //                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        //                         <span aria-hidden="true">&times;</span>
+        //                     </button>
+        //                 </div>`;
             addUserForm.prepend(alert)
         }
     })

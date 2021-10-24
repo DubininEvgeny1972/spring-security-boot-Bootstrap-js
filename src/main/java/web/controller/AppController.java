@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
@@ -24,13 +25,18 @@ public class AppController {
     @GetMapping(value = "/admin/users") //  поиск всех юзеров
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   " + users);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-    @GetMapping(value = "/user/user") //поиск 1 юзера
-    public ResponseEntity<User> getAuthentication(Principal principal) {
+
+    @GetMapping(value = "/admin/user") //поиск 1 аюмина
+    public ResponseEntity<User> getAuthenticationAdmin(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    " + user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/user/user") //поиск 1 юзера
+    public ResponseEntity<User> getAuthenticationUser(Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -40,7 +46,7 @@ public class AppController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/users/add") //добавление юзера
+    @PostMapping("/admin/add") //добавление юзера
     public ResponseEntity<User> insert(@RequestBody User user) {
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -58,10 +64,8 @@ public class AppController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/roles")
-//    public ResponseEntity<Iterable<Role>> findAllRoles() {
-//        return ResponseEntity.ok(appService.findAllRoles());
-//    }
-
-
+    @GetMapping(value = "/admin/roles")
+    public ResponseEntity<Iterable<Role>> findAllRoles() {
+        return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
+    }
 }
