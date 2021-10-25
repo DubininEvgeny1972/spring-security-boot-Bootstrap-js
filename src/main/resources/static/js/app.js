@@ -20,7 +20,7 @@ const userFetchService = {
     // bodyAdd : async function(user) {return {'method': 'POST', 'headers': this.head, 'body': user}},
     findAllUsers: async () => await fetch('users'),
     findOneUser: async (id) => await fetch(`${id}`),
-    addNewUser: async (user) => await fetch('api/users', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
+    addNewUser: async (user) => await fetch('add', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
     updateUser: async (user, id) => await fetch(`${id}`, {method: 'PATCH', headers: userFetchService.head, body: JSON.stringify(user)}),
     deleteUser: async (id) => await fetch(`${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
@@ -62,6 +62,7 @@ async function getTableWithAdmin() {
             table.append(tableFilling);
         })
 }
+
 async function getTableWithUsers() {
     let table = $('#mainTableWithUsers tbody');
     table.empty();
@@ -157,8 +158,7 @@ async function getDefaultModal() {
 async function editUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
     let user = preuser.json();
-    let allRoles = fetch('roles')
-    let roles = (await allRoles).json();
+    // let allRoles = fetch('roles').json();
 
     modal.find('.modal-title').html('Edit user');
 
@@ -177,15 +177,11 @@ async function editUser(modal, id) {
                 <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}"><br>
                 <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="password" id="password"><br>
                 
-                <label th:for="roles" class="font-weight-bold">Role
-                <input type="checkbox" name="roles" value="${user.roles[0]}" id="roles"><br>
-                
-                
-                
-<!--                <input class="form-control" type="roles" id="roles" value="${user.roles.map(role => "  " + role.name)}"><br>-->
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
+        // let allRoles = fetch('roles').json();
+        // modal.find('.modal-body').append(allRoles);
     })
 
     $("#editButton").on('click', async () => {
@@ -251,29 +247,26 @@ async function deleteUser(modal, id) {
 async function addNewUser() {
     $('#addNewUserButton').click(async () =>  {
         let addUserForm = $('#defaultSomeForm')
+        let name = addUserForm.find('#AddNewUserName').val().trim();
+        let lastName = addUserForm.find('#AddNewUserLastName').val().trim();
+        let age = addUserForm.find('#AddNewUserAge').val().trim();
         let login = addUserForm.find('#AddNewUserLogin').val().trim();
         let password = addUserForm.find('#AddNewUserPassword').val().trim();
-        let age = addUserForm.find('#AddNewUserAge').val().trim();
+
         let data = {
+            name: name,
+            lastName: lastName,
             login: login,
             password: password,
             age: age
         }
         const response = await userFetchService.addNewUser(data);
-        if (response.ok) {
-            getTableWithUsers();
-            addUserForm.find('#AddNewUserLogin').val('');
-            addUserForm.find('#AddNewUserPassword').val('');
-            addUserForm.find('#AddNewUserAge').val('');
-        } else {
-            let body = await response.json();
-            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
-                            ${body.info}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>`;
-            addUserForm.prepend(alert)
-        }
+        getTableWithUsers();
+        modal.modal('hide');
+        // addUserForm.find('#AddNewUserName').val('');
+        // addUserForm.find('#AddNewUserLastName').val('');
+        // addUserForm.find('#AddNewUserAge').val('');
+        // addUserForm.find('#AddNewUserLogin').val('');
+        // addUserForm.find('#AddNewUserPassword').val('');
     })
 }

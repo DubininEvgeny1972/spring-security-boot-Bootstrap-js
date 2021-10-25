@@ -9,7 +9,9 @@ import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class AppController {
@@ -52,6 +54,10 @@ public class AppController {
 
     @PostMapping("/admin/add") //добавление юзера
     public ResponseEntity<User> insert(@RequestBody User user) {
+        System.out.println("Создаю юзера " + user);
+        Set<Role> rol = new HashSet<>();
+        rol.add(roleService.findRole(new Role("ROLE_USER")));
+        user.setRoles(rol);
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -72,6 +78,7 @@ public class AppController {
 
     @GetMapping(value = "/admin/roles")
     public ResponseEntity<Iterable<Role>> findAllRoles() {
+        System.out.println("Отдаю роли " + roleService.getAllRoles());
         return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
     }
 }
