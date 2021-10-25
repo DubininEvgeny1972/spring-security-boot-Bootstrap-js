@@ -25,24 +25,28 @@ public class AppController {
     @GetMapping(value = "/admin/users") //  поиск всех юзеров
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
+        System.out.println("Я вывел всех юзеров! :  " + users);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping(value = "/admin/user") //поиск 1 аюмина
     public ResponseEntity<User> getAuthenticationAdmin(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
+        System.out.println("Я админ, я авторизовался! :  " + user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping(value = "/user/user") //поиск 1 юзера
     public ResponseEntity<User> getAuthenticationUser(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
+        System.out.println("Я юзер, я авторизовался! :  " + user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{id}}") //поиск юзера по ИД
-    public ResponseEntity<User> getOne(@PathVariable Long id) {
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<User> apiGetOneUser(@PathVariable("id") long id) {
         User user = userService.getById(id);
+        System.out.println("Я " + user.getName() + " юзер с Id = " +id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
