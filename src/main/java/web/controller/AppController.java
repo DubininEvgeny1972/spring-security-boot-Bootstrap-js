@@ -1,13 +1,19 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import web.config.DataInfoHandler;
+import web.config.handler.UserWithSuchLoginExist;
 import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
+
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
@@ -62,9 +68,12 @@ public class AppController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/admin/{id}}") //изменение юзера
-    public ResponseEntity<User> update(@RequestBody User user) {
+    @PutMapping("/admin/{id}")
+    public ResponseEntity<User> apiUpdateUser(@PathVariable("id") long id, @RequestBody User user) {
         System.out.println("Редактирую юзера " + user);
+        Set<Role> rol = new HashSet<>();
+        rol.add(roleService.findRole(new Role("ROLE_USER")));
+        user.setRoles(rol);
         userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

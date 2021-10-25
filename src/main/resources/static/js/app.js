@@ -21,7 +21,7 @@ const userFetchService = {
     findAllUsers: async () => await fetch('users'),
     findOneUser: async (id) => await fetch(`${id}`),
     addNewUser: async (user) => await fetch('add', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
-    updateUser: async (user, id) => await fetch(`${id}`, {method: 'PATCH', headers: userFetchService.head, body: JSON.stringify(user)}),
+    updateUser: async (user, id) => await fetch(`${id}`, {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
     deleteUser: async (id) => await fetch(`${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
 async function thisUser() {
@@ -180,8 +180,6 @@ async function editUser(modal, id) {
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
-        // let allRoles = fetch('roles').json();
-        // modal.find('.modal-body').append(allRoles);
     })
 
     $("#editButton").on('click', async () => {
@@ -192,12 +190,6 @@ async function editUser(modal, id) {
         let login = modal.find("#login").val().trim();
         let password = modal.find("#password").val().trim();
 
-        let roles=$('input:checked'); //выбираем все отмеченные checkbox
-        let out=[]; //выходной массив
-
-        for (let i = 0; i < roles.length-1; i++){ //перебераем все объекты
-            out.push(roles[i].name); //добавляем значения в выходной массив
-        }
 
         let data = {
             id: id,
@@ -205,8 +197,7 @@ async function editUser(modal, id) {
             lastName: lastName,
             login: login,
             password: password,
-            age: age,
-            roles: out
+            age: age
         }
         const response = await userFetchService.updateUser(data, id);
         getTableWithUsers();
@@ -262,11 +253,10 @@ async function addNewUser() {
         }
         const response = await userFetchService.addNewUser(data);
         getTableWithUsers();
-        modal.modal('hide');
-        // addUserForm.find('#AddNewUserName').val('');
-        // addUserForm.find('#AddNewUserLastName').val('');
-        // addUserForm.find('#AddNewUserAge').val('');
-        // addUserForm.find('#AddNewUserLogin').val('');
-        // addUserForm.find('#AddNewUserPassword').val('');
+        addUserForm.find('#AddNewUserName').val('');
+        addUserForm.find('#AddNewUserLastName').val('');
+        addUserForm.find('#AddNewUserAge').val('');
+        addUserForm.find('#AddNewUserLogin').val('');
+        addUserForm.find('#AddNewUserPassword').val('');
     })
 }
