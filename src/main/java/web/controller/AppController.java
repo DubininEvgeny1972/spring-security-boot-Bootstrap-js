@@ -56,14 +56,16 @@ public class AppController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/admin/edit") //изменение юзера
+    @PatchMapping("/admin/{id}}") //изменение юзера
     public ResponseEntity<User> update(@RequestBody User user) {
+        System.out.println("Редактирую юзера " + user);
         userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/remove/{id}") //удаление юзера
+    @DeleteMapping("/admin/{id}") //удаление юзера
     public ResponseEntity<Void> delete(@PathVariable Long id) {
+        System.out.println("Удаляю юзера с Ид = " + id);
         userService.removeUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
