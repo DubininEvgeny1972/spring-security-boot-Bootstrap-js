@@ -187,8 +187,8 @@ async function editUser(modal, id) {
                 <label th:for="password" class="font-weight-bold">Role<br>
                 <div>
                     <select class="form-control" id="mySelectId" name="mySelect" multiple required size="2">
-                        <option value="str1" id = "str1" value=str1"> ${allRoles[0].name} </option>
-                        <option value="str2" id = "str2" value=str2"> ${allRoles[1].name} </option>
+                        <option value="${allRoles[0].name}"> ${allRoles[0].name} </option>
+                        <option value="${allRoles[1].name}"> ${allRoles[1].name} </option>
                     </select>
                 </div>
             </form>
@@ -196,7 +196,18 @@ async function editUser(modal, id) {
         modal.find('.modal-body').append(bodyForm);
     })
 
-
+    // var userFormId = $('#editUser');
+    // fetch('roles').then(function (response) {
+    //     userFormId.find('#mySelectId').empty();
+    //         response.json().then(roleList => {
+    //             roleList.forEach(role => {
+    //                 userFormId.find('#mySelectId')
+    //                     .append($('<option>')
+    //                         .prop('selected', user.roles.filter(e => e.id === role.id).length)
+    //                         .val(role.id).text(role.name));
+    //             });
+    //         });
+    // });
     $("#editButton").on('click', async () => {
         let id = modal.find("#id").val().trim();
         let age = modal.find("#age").val().trim();
@@ -206,11 +217,14 @@ async function editUser(modal, id) {
         let password = modal.find("#password").val().trim();
         let roleByUser = [];
 
-        for (var i = 0; i < allRoles.length; i++) {
-            if (allRoles[i]!== null) {
-                roleByUser.push(allRoles[i]);
-            }
-        }
+        var e = document.getElementById("mySelectId");
+        var oneItem = e.options[e.selectedIndex].value;
+        roleByUser.push(oneItem);
+        // for (var i = 0; i < allRoles.length; i++) {
+        //     if (allRoles[i]!== null) {
+        //         roleByUser.push(allRoles[i]);
+        //     }
+        // }
 
         let data = {
             id: id,
