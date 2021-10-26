@@ -71,9 +71,14 @@ public class AppController {
     @PutMapping("/admin/{id}")
     public ResponseEntity<User> apiUpdateUser(@PathVariable("id") long id, @RequestBody User user) {
         System.out.println("Редактирую юзера " + user);
-        Set<Role> rol = new HashSet<>();
-        rol.add(roleService.findRole(new Role("ROLE_USER")));
-        user.setRoles(rol);
+        System.out.println("Его роли " + user.getRoles());
+        if (user.getRoles().size() != 0) {
+            Set<Role> roleForUpdateUser = new HashSet<>();
+            user.getRoles().forEach((element) -> roleForUpdateUser.add(roleService.findRole(element)));
+            user.setRoles(roleForUpdateUser);
+        } else {
+            user.setRoles(userService.getById(user.getId()).getRoles());
+        }
         userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -158,7 +158,14 @@ async function getDefaultModal() {
 async function editUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
     let user = preuser.json();
-    // let allRoles = fetch('roles').json();
+    let allRoles = []
+    let roles = await fetch('roles')
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                allRoles.push(role)
+            })
+        })
 
     modal.find('.modal-title').html('Edit user');
 
@@ -176,11 +183,19 @@ async function editUser(modal, id) {
                 <label th:for="age" class="font-weight-bold">Age<input class="form-control" id="age" type="number" value="${user.age}">
                 <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}"><br>
                 <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="password" id="password"><br>
-                
+                <h1></h1>
+                <label th:for="password" class="font-weight-bold">Role<br>
+                <div>
+                    <select class="form-control" id="mySelectId" name="mySelect" multiple required size="2">
+                        <option value="str1" id = "str1" value=str1"> ${allRoles[0].name} </option>
+                        <option value="str2" id = "str2" value=str2"> ${allRoles[1].name} </option>
+                    </select>
+                </div>
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
     })
+
 
     $("#editButton").on('click', async () => {
         let id = modal.find("#id").val().trim();
@@ -189,7 +204,13 @@ async function editUser(modal, id) {
         let lastName = modal.find("#lastName").val().trim();
         let login = modal.find("#login").val().trim();
         let password = modal.find("#password").val().trim();
+        let roleByUser = [];
 
+        for (var i = 0; i < allRoles.length; i++) {
+            if (allRoles[i]!== null) {
+                roleByUser.push(allRoles[i]);
+            }
+        }
 
         let data = {
             id: id,
@@ -197,7 +218,8 @@ async function editUser(modal, id) {
             lastName: lastName,
             login: login,
             password: password,
-            age: age
+            age: age,
+            roles: roleByUser
         }
         const response = await userFetchService.updateUser(data, id);
         getTableWithUsers();
