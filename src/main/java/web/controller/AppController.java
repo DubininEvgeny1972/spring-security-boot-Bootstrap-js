@@ -28,42 +28,29 @@ public class AppController {
     @GetMapping(value = "/admin/users") //  поиск всех юзеров
     public ResponseEntity<List<User>> findAll() {
         List<User> users = userService.findAll();
-        System.out.println("Я вывел всех юзеров! :  " + users);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/admin/user") //поиск 1 аюмина
+    @GetMapping(value = "/admin/user") //поиск 1 админа
     public ResponseEntity<User> getAuthenticationAdmin(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        System.out.println("Я админ, я авторизовался! :  " + user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping(value = "/user/user") //поиск 1 юзера
     public ResponseEntity<User> getAuthenticationUser(Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        System.out.println("Я юзер, я авторизовался! :  " + user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/admin/{id}")
     public ResponseEntity<User> apiGetOneUser(@PathVariable("id") long id) {
         User user = userService.getById(id);
-        System.out.println("Я " + user.getName() + " юзер с Id = " +id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
-    @GetMapping("/admin/newser")
-    public ResponseEntity<User> getNewUser() {
-        User user = new User();
-        System.out.println("Я осылаю пустого нового юзера");
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
 
     @PostMapping("/admin/add") //добавление юзера
     public ResponseEntity<User> insert(@RequestBody User user) {
-        System.out.println("Создаю юзера " + user);
         Set<Role> roleForUpdateUser = new HashSet<>();
         user.getRoles().forEach((element) -> roleForUpdateUser.add(roleService.findRole(element)));
         user.setRoles(roleForUpdateUser);
@@ -73,8 +60,6 @@ public class AppController {
 
     @PutMapping("/admin/{id}")
     public ResponseEntity<User> apiUpdateUser(@PathVariable("id") long id, @RequestBody User user) {
-        System.out.println("Редактирую юзера " + user);
-        System.out.println("Его роли " + user.getRoles());
         if (user.getRoles().size() != 0) {
             Set<Role> roleForUpdateUser = new HashSet<>();
             user.getRoles().forEach((element) -> roleForUpdateUser.add(roleService.findRole(element)));
@@ -88,14 +73,12 @@ public class AppController {
 
     @DeleteMapping("/admin/{id}") //удаление юзера
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        System.out.println("Удаляю юзера с Ид = " + id);
         userService.removeUserById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/admin/roles")
     public ResponseEntity<Iterable<Role>> findAllRoles() {
-        System.out.println("Отдаю роли " + roleService.getAllRoles());
         return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
     }
 }

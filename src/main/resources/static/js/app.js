@@ -1,13 +1,11 @@
 $(async function () {
     await getTableWithUsers();
-
     await getTableWithAdmin();
     await getRolesByUser();
     await thisUser();
-
-    getNewUserForm();
+    await AddUser();
+    await getAllRoles();
     getDefaultModal();
-    addNewUser();
 })
 
 
@@ -17,16 +15,30 @@ const userFetchService = {
         'Content-Type': 'application/json',
         'Referer': null
     },
-    // bodyAdd : async function(user) {return {'method': 'POST', 'headers': this.head, 'body': user}},
+    findAllRoles: async () => await fetch('roles'),
+    findPrincipal: async () => await fetch('user'),
     findAllUsers: async () => await fetch('users'),
     findOneUser: async (id) => await fetch(`${id}`),
     addNewUser: async (user) => await fetch('add', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
     updateUser: async (user, id) => await fetch(`${id}`, {method: 'PUT', headers: userFetchService.head, body: JSON.stringify(user)}),
     deleteUser: async (id) => await fetch(`${id}`, {method: 'DELETE', headers: userFetchService.head})
 }
+
+async function getAllRoles() {
+    let allRoles = [];
+    await userFetchService.findAllRoles()
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                allRoles.push(role);
+            })
+        })
+    return allRoles;
+}
+
 async function thisUser() {
     let userFind = $('#thisUser b');
-    fetch('user')
+    await userFetchService.findPrincipal()
         .then(res => res.json())
         .then(user => {
             let thisUser = user.login
@@ -36,7 +48,7 @@ async function thisUser() {
 
 async function getRolesByUser() {
     let roleFind = $('#RolesByUser c');
-    fetch('user')
+    await userFetchService.findPrincipal()
         .then(res => res.json())
         .then(user => {
             let rolesUser = user.roles.map(role => "  " + role.name)
@@ -46,7 +58,7 @@ async function getRolesByUser() {
 
 async function getTableWithAdmin() {
     let table = $('#mainTableWithAdmin tbody');
-    fetch('user')
+    await userFetchService.findPrincipal()
         .then(res => res.json())
         .then(user => {
             let tableFilling = `$(
@@ -66,7 +78,6 @@ async function getTableWithAdmin() {
 async function getTableWithUsers() {
     let table = $('#mainTableWithUsers tbody');
     table.empty();
-
     await userFetchService.findAllUsers()
         .then(res => res.json())
         .then(users => {
@@ -93,11 +104,8 @@ async function getTableWithUsers() {
             })
         })
 
-    // обрабатываем нажатие на любую из кнопок edit или delete
-    // достаем из нее данные и отдаем модалке, которую к тому же открываем
     $("#mainTableWithUsers").find('button').on('click', (event) => {
         let defaultModal = $('#someDefaultModal');
-
         let targetButton = $(event.target);
         let buttonUserId = targetButton.attr('data-userid');
         let buttonAction = targetButton.attr('data-action');
@@ -108,10 +116,6 @@ async function getTableWithUsers() {
     })
 }
 
-
-
-// что то деалем при открытии модалки и при закрытии
-// основываясь на ее дата атрибутах
 async function getDefaultModal() {
     $('#someDefaultModal').modal({
         keyboard: true,
@@ -137,20 +141,17 @@ async function getDefaultModal() {
     })
 }
 
-
-// редактируем юзера из модалки редактирования, забираем данные, отправляем
 async function editUser(modal, id) {
-    let preuser = await userFetchService.findOneUser(id);
+    let preuser = await userFetchService.findOneUser(`${id}`);
     let user = preuser.json();
-    let allEditRoles = []
-    await fetch('roles')
+    let allEditRoles = [];
+    await userFetchService.findAllRoles()
         .then(res => res.json())
         .then(roles => {
             roles.forEach(role => {
-                allEditRoles.push(role)
+                allEditRoles.push(role);
             })
         })
-
     modal.find('.modal-title').html('Edit user');
 
     let editButton = `<button  class="btn btn-outline-success" id="editButton">Edit</button>`;
@@ -178,7 +179,6 @@ async function editUser(modal, id) {
         modal.find('.modal-body').append(bodyForm);
     });
 
-
     $("#editButton").on('click', async () => {
         let id = modal.find("#id").val().trim();
         let age = modal.find("#age").val().trim();
@@ -188,9 +188,9 @@ async function editUser(modal, id) {
         let password = modal.find("#password").val().trim();
         let roleByUserEdit = [];
 
-        var elEditRole = document.getElementById("mySelectId");
-        for (var i = 0; i < elEditRole.options.length; i++) {
-            var oneAddRole = elEditRole.options[i];
+        let elEditRole = document.getElementById("mySelectId");
+        for (let i = 0; i < elEditRole.options.length; i++) {
+            let oneAddRole = elEditRole.options[i];
             if (oneAddRole.selected) roleByUserEdit.push(oneAddRole.value);
         }
 
@@ -210,9 +210,16 @@ async function editUser(modal, id) {
 }
 
 async function deleteUser(modal, id) {
-    let preuser = await userFetchService.findOneUser(id);
+    let preuser = await userFetchService.findOneUser(`${id}`);
     let user = preuser.json();
-
+    let allDelRoles = [];
+    await userFetchService.findAllRoles()
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                allDelRoles.push(role);
+            })
+        })
     modal.find('.modal-title').html('Delete user');
 
     let deleteButton = `<button  class="btn btn-danger" id="deleteButton">Delete</button>`;
@@ -226,8 +233,14 @@ async function deleteUser(modal, id) {
                 <label for="id" class="font-weight-bold">ID<input type="text" class="form-control" id="id" name="id" value="${user.id}" disabled><br>
                 <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" id="name" value="${user.name}" disabled><br>
                 <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" id="lastName" value="${user.lastName}" disabled><br>
-                <label th:for="age" class="font-weight-bold">Age<input class="form-control" id="age" type="number" value="${user.age}" disabled>
-                <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}" disabled><br>               
+                <label th:for="age" class="font-weight-bold">Age<input class="form-control" id="age" type="number" value="${user.age}" disabled><br>
+                <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}" disabled><br>   
+                <h1></h1>
+                <label th:for="roles" class="font-weight-bold">Role<br>
+                <select class="form-control" id="mySelectId" name="mySelectDelete" multiple size="2">
+                    <option value="${allDelRoles[0].name}" disabled>${allDelRoles[0].name}</option>
+                    <option value="${allDelRoles[1].name}" disabled>${allDelRoles[1].name}</option>
+                </select>            
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
@@ -239,13 +252,13 @@ async function deleteUser(modal, id) {
     })
 }
 
-async function getNewUserForm() {
-    let allAddRoles = []
-    await fetch('roles')
+async function AddUser() {
+    let allAddRoles = [];
+    await userFetchService.findAllRoles()
         .then(res => res.json())
         .then(roles => {
             roles.forEach(role => {
-                allAddRoles.push(role)
+                allAddRoles.push(role);
             })
         })
     let select = $('#defaultSomeForm div');
@@ -265,9 +278,9 @@ async function getNewUserForm() {
         let password = addUserForm.find('#AddNewUserPassword').val().trim();
         let roleByUserAdd = [];
 
-        var elAddRole = document.getElementById("mySelectForAddId");
-        for (var i = 0; i < elAddRole.options.length; i++) {
-            var oneAddRole = elAddRole.options[i];
+        let elAddRole = document.getElementById("mySelectForAddId");
+        for (let i = 0; i < elAddRole.options.length; i++) {
+            let oneAddRole = elAddRole.options[i];
             if (oneAddRole.selected) roleByUserAdd.push(oneAddRole.value);
         }
 

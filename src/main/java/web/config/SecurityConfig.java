@@ -53,14 +53,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .successHandler(loginSuccessHandler); // подключаем наш SuccessHandler для перенеправления по ролям
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder(){
-//        PasswordEncoder encoder = new BCryptPasswordEncoder();
-//        return encoder;
-//    }
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder passwordEncoder(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
     }
-
 }
