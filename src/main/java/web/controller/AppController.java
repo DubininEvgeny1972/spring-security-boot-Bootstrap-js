@@ -1,19 +1,14 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import web.config.DataInfoHandler;
-import web.config.handler.UserWithSuchLoginExist;
 import web.model.Role;
 import web.model.User;
 import web.service.RoleService.RoleService;
 import web.service.UserService.UserService;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
@@ -58,12 +53,20 @@ public class AppController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/admin/newser")
+    public ResponseEntity<User> getNewUser() {
+        User user = new User();
+        System.out.println("Я осылаю пустого нового юзера");
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
     @PostMapping("/admin/add") //добавление юзера
     public ResponseEntity<User> insert(@RequestBody User user) {
         System.out.println("Создаю юзера " + user);
-        Set<Role> rol = new HashSet<>();
-        rol.add(roleService.findRole(new Role("ROLE_USER")));
-        user.setRoles(rol);
+        Set<Role> roleForUpdateUser = new HashSet<>();
+        user.getRoles().forEach((element) -> roleForUpdateUser.add(roleService.findRole(element)));
+        user.setRoles(roleForUpdateUser);
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

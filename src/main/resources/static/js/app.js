@@ -109,22 +109,6 @@ async function getTableWithUsers() {
 }
 
 
-async function getNewUserForm() {
-    let button = $(`#SliderNewUserForm`);
-    let form = $(`#defaultSomeForm`)
-    button.on('click', () => {
-        if (form.attr("data-hidden") === "true") {
-            form.attr('data-hidden', 'false');
-            form.show();
-            button.text('Hide panel');
-        } else {
-            form.attr('data-hidden', 'true');
-            form.hide();
-            button.text('Show panel');
-        }
-    })
-}
-
 
 // что то деалем при открытии модалки и при закрытии
 // основываясь на ее дата атрибутах
@@ -158,12 +142,12 @@ async function getDefaultModal() {
 async function editUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
     let user = preuser.json();
-    let allRoles = []
-    let roles = await fetch('roles')
+    let allEditRoles = []
+    await fetch('roles')
         .then(res => res.json())
         .then(roles => {
             roles.forEach(role => {
-                allRoles.push(role)
+                allEditRoles.push(role)
             })
         })
 
@@ -177,37 +161,24 @@ async function editUser(modal, id) {
     user.then(user => {
         let bodyForm = `
             <form class="form-group text-center" id="editUser">
-                <label for="id" class="font-weight-bold">ID<input type="text" class="form-control" id="id" name="id" value="${user.id}" disabled><br>
-                <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" id="name" value="${user.name}"><br>
-                <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" id="lastName" value="${user.lastName}"><br>
+                <label for="id" class="font-weight-bold">ID<input type="text" class="form-control" id="id" name="id" value="${user.id}" disabled>
+                <label th:for="name" class="font-weight-bold">First Name<input class="form-control" type="text" id="name" value="${user.name}">
+                <label th:for="lastName" class="font-weight-bold">Last Name<input class="form-control" type="text" id="lastName" value="${user.lastName}">
                 <label th:for="age" class="font-weight-bold">Age<input class="form-control" id="age" type="number" value="${user.age}">
-                <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}"><br>
-                <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="password" id="password"><br>
+                <label th:for="login" class="font-weight-bold">Login<input class="form-control" type="text" id="login" value="${user.login}">
+                <label th:for="password" class="font-weight-bold">Password<input class="form-control" type="password" id="password">
                 <h1></h1>
                 <label th:for="password" class="font-weight-bold">Role<br>
-                <div>
-                    <select class="form-control" id="mySelectId" name="mySelect" multiple required size="2">
-                        <option value="${allRoles[0].name}"> ${allRoles[0].name} </option>
-                        <option value="${allRoles[1].name}"> ${allRoles[1].name} </option>
-                    </select>
-                </div>
+                <select class="form-control" id="mySelectId" name="mySelect" multiple size="2">
+                    <option value="${allEditRoles[0].name}">${allEditRoles[0].name}</option>
+                    <option value="${allEditRoles[1].name}">${allEditRoles[1].name}</option>
+                </select>
             </form>
         `;
         modal.find('.modal-body').append(bodyForm);
-    })
+    });
 
-    // var userFormId = $('#editUser');
-    // fetch('roles').then(function (response) {
-    //     userFormId.find('#mySelectId').empty();
-    //         response.json().then(roleList => {
-    //             roleList.forEach(role => {
-    //                 userFormId.find('#mySelectId')
-    //                     .append($('<option>')
-    //                         .prop('selected', user.roles.filter(e => e.id === role.id).length)
-    //                         .val(role.id).text(role.name));
-    //             });
-    //         });
-    // });
+
     $("#editButton").on('click', async () => {
         let id = modal.find("#id").val().trim();
         let age = modal.find("#age").val().trim();
@@ -215,16 +186,13 @@ async function editUser(modal, id) {
         let lastName = modal.find("#lastName").val().trim();
         let login = modal.find("#login").val().trim();
         let password = modal.find("#password").val().trim();
-        let roleByUser = [];
+        let roleByUserEdit = [];
 
-        var e = document.getElementById("mySelectId");
-        var oneItem = e.options[e.selectedIndex].value;
-        roleByUser.push(oneItem);
-        // for (var i = 0; i < allRoles.length; i++) {
-        //     if (allRoles[i]!== null) {
-        //         roleByUser.push(allRoles[i]);
-        //     }
-        // }
+        var elEditRole = document.getElementById("mySelectId");
+        for (var i = 0; i < elEditRole.options.length; i++) {
+            var oneAddRole = elEditRole.options[i];
+            if (oneAddRole.selected) roleByUserEdit.push(oneAddRole.value);
+        }
 
         let data = {
             id: id,
@@ -233,13 +201,14 @@ async function editUser(modal, id) {
             login: login,
             password: password,
             age: age,
-            roles: roleByUser
+            roles: roleByUserEdit
         }
         const response = await userFetchService.updateUser(data, id);
         getTableWithUsers();
         modal.modal('hide');
     })
 }
+
 async function deleteUser(modal, id) {
     let preuser = await userFetchService.findOneUser(id);
     let user = preuser.json();
@@ -270,8 +239,23 @@ async function deleteUser(modal, id) {
     })
 }
 
-
-async function addNewUser() {
+async function getNewUserForm() {
+    let allAddRoles = []
+    await fetch('roles')
+        .then(res => res.json())
+        .then(roles => {
+            roles.forEach(role => {
+                allAddRoles.push(role)
+            })
+        })
+    let select = $('#defaultSomeForm div');
+    let bodyFilling = `
+        <select class="form-control" id="mySelectForAddId" name="mySelect" multiple size="2">
+            <option value="${allAddRoles[0].name}">${allAddRoles[0].name}</option>
+            <option value="${allAddRoles[1].name}">${allAddRoles[1].name}</option>
+        </select>
+    `;
+    select.append(bodyFilling);
     $('#addNewUserButton').click(async () =>  {
         let addUserForm = $('#defaultSomeForm')
         let name = addUserForm.find('#AddNewUserName').val().trim();
@@ -279,13 +263,21 @@ async function addNewUser() {
         let age = addUserForm.find('#AddNewUserAge').val().trim();
         let login = addUserForm.find('#AddNewUserLogin').val().trim();
         let password = addUserForm.find('#AddNewUserPassword').val().trim();
+        let roleByUserAdd = [];
+
+        var elAddRole = document.getElementById("mySelectForAddId");
+        for (var i = 0; i < elAddRole.options.length; i++) {
+            var oneAddRole = elAddRole.options[i];
+            if (oneAddRole.selected) roleByUserAdd.push(oneAddRole.value);
+        }
 
         let data = {
             name: name,
             lastName: lastName,
+            age: age,
             login: login,
             password: password,
-            age: age
+            roles: roleByUserAdd
         }
         const response = await userFetchService.addNewUser(data);
         getTableWithUsers();

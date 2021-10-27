@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter  {
                 .logoutSuccessUrl("/login?logout")
                 .and().csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/").permitAll() // доступность всем
+//                .antMatchers("/login").permitAll() // доступность всем
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .and().formLogin()  // Spring сам подставит свою логин форму
